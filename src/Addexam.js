@@ -14,7 +14,7 @@ const Addexam = ({ onAdd }) => {
   }, []);
 
   const refreshMovies = () => {
-    API.get("/")
+    API.get("exam/")
       .then((res) => {
         setMovies(res.data);
         // setName(res[0].name)
@@ -28,16 +28,17 @@ const Addexam = ({ onAdd }) => {
   const onSubmit = (e) => {
     e.preventDefault();
     let item = { exam_name, description, remarks };
-    API.post("/", item).then(() => refreshMovies());
+    API.post("exam/", item).then(() => refreshMovies());
   };
 
   const onUpdate = (id) => {
-    let item = { exam_name,description,remarks };
-    API.patch(`/${id}/`,item).then((res) => refreshMovies());
+    let item = { exam_name, description, remarks };
+    API.put(`exam/${id}`,item).then((res) => refreshMovies());
   };
 
   const onDelete = (id) => {
-    API.delete(`/${id}/`).then((res) => refreshMovies());
+    API.delete(`exam/${id}`).then((res) => refreshMovies());
+    
   };
 
   function selectMovie(id) {
@@ -52,7 +53,7 @@ const Addexam = ({ onAdd }) => {
     <div className="container mt-5">
       <div className="row">
         <div className="col-md-4">
-          <h3 className="float-left">Create a new Movie</h3>
+          <h3 className="float-left">Create a new Exam</h3>
           <Form onSubmit={onSubmit} className="mt-4">
             <Form.Group className="mb-3" controlId="formBasicName">
               <Form.Label>{movieId}Exam_name</Form.Label>
@@ -133,12 +134,21 @@ const Addexam = ({ onAdd }) => {
                       <i
                         className="fa fa-trash-o text-danger d-inline mx-3"
                         aria-hidden="true"
-                        onClick={() => onDelete(movie.id)}
+                        onClick={() =>{
+                          const confirmBox = window.confirm(
+                            "Do you really want to delete this exam?"
+                          )
+                          if (confirmBox === true) {
+                            onDelete(movie.id)
+                          }
+                        }} 
                       ></i>
                     </td>
                   </tr>
                 );
               })}
+            
+               
             </tbody>
           </table>
         </div>
