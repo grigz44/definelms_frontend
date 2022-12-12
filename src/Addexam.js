@@ -4,23 +4,23 @@ import API from "./API";
 
 const Addexam = ({ onAdd }) => {
   const [exam_name, setName] = useState("");
-  const [description, setGenre] = useState("");
-  const [remarks, setStarring] = useState("");
-  const [movieId, setMovieId] = useState(null);
-  const [movies, setMovies] = useState([]);
+  const [description, setdescription] = useState("");
+  const [remarks, setremarks] = useState("");
+  const [Examid, setExamid] = useState(null);
+  const [Exams, setExams] = useState([]);
 
   useEffect(() => {
-    refreshMovies();
+    refreshExams();
   }, []);
 
-  const refreshMovies = () => {
+  const refreshExams = () => {
     API.get("exam/")
       .then((res) => {
-        setMovies(res.data);
+        setExams(res.data);
         // setName(res[0].name)
         // setGenre(res[0].genre)
         // setStarring(res[0].starring)
-        // setMovieId(res[0].id)
+        // setExamid(res[0].id)
       })
       .catch(console.error);
   };
@@ -28,25 +28,25 @@ const Addexam = ({ onAdd }) => {
   const onSubmit = (e) => {
     e.preventDefault();
     let item = { exam_name, description, remarks };
-    API.post("exam/", item).then(() => refreshMovies());
+    API.post("exam/", item).then(() => refreshExams());
   };
 
   const onUpdate = (id) => {
     let item = { exam_name, description, remarks };
-    API.put(`exam/${id}`,item).then((res) => refreshMovies());
+    API.put(`exam/${id}`,item).then((res) => refreshExams());
   };
 
   const onDelete = (id) => {
-    API.delete(`exam/${id}`).then((res) => refreshMovies());
+    API.delete(`exam/${id}`).then((res) => refreshExams());
     
   };
 
-  function selectMovie(id) {
-    let item = movies.filter((movie) => movie.id === id)[0];
+  function selectExam(id) {
+    let item = Exams.filter((exam) => exam.id === id)[0];
     setName(item.exam_name);
-    setGenre(item.description);
-    setStarring(item.remarks);
-    setMovieId(item.id);
+    setdescription(item.description);
+    setremarks(item.remarks);
+    setExamid(item.id);
   }
 
   return (
@@ -56,7 +56,7 @@ const Addexam = ({ onAdd }) => {
           <h3 className="float-left">Create a new Exam</h3>
           <Form onSubmit={onSubmit} className="mt-4">
             <Form.Group className="mb-3" controlId="formBasicName">
-              <Form.Label>{movieId}Exam_name</Form.Label>
+              <Form.Label>{Examid}Exam_name</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter Exam name"
@@ -71,7 +71,7 @@ const Addexam = ({ onAdd }) => {
                 type="text"
                 placeholder="Enter Description"
                 value={description}
-                onChange={(e) => setGenre(e.target.value)}
+                onChange={(e) => setdescription(e.target.value)}
               />
             </Form.Group>
 
@@ -81,7 +81,7 @@ const Addexam = ({ onAdd }) => {
                 type="text"
                 placeholder="Enter Remarks"
                 value={remarks}
-                onChange={(e) => setStarring(e.target.value)}
+                onChange={(e) => setremarks(e.target.value)}
               />
             </Form.Group>
 
@@ -89,7 +89,9 @@ const Addexam = ({ onAdd }) => {
               <Button
                 variant="primary"
                 type="submit"
-                onClick={onSubmit}
+                onClick={() => {
+                  // onUpdate(Examid);
+                  onSubmit();}}
                 className="mx-2"
               >
                 Save
@@ -97,7 +99,7 @@ const Addexam = ({ onAdd }) => {
               <Button
                 variant="primary"
                 type="button"
-                onClick={() => onUpdate(movieId)}
+                onClick={() => onUpdate(Examid)}
                 className="mx-2"
               >
                 Update
@@ -117,18 +119,18 @@ const Addexam = ({ onAdd }) => {
               </tr>
             </thead>
             <tbody>
-              {movies.map((movie, index) => {
+              {Exams.map((exam, index) => {
                 return (
                   <tr key="">
-                    <th scope="row">{movie.id}</th>
-                    <td> {movie.exam_name}</td>
-                    <td>{movie.description}</td>
-                    <td>{movie.remarks}</td>
+                    <th scope="row">{exam.id}</th>
+                    <td> {exam.exam_name}</td>
+                    <td>{exam.description}</td>
+                    <td>{exam.remarks}</td>
                     <td>
                       <i
                         className="fa fa-pencil-square text-primary d-inline"
                         aria-hidden="true"
-                        onClick={() => selectMovie(movie.id)}
+                        onClick={() => selectExam(exam.id)}
                       ></i></td>
                       <td>
                       <i
@@ -139,7 +141,7 @@ const Addexam = ({ onAdd }) => {
                             "Do you really want to delete this exam?"
                           )
                           if (confirmBox === true) {
-                            onDelete(movie.id)
+                            onDelete(exam.id)
                           }
                         }} 
                       ></i>
